@@ -1,0 +1,88 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatWorkshopDate } from '../lib/workshops.ts';
+
+interface Props {
+	workshop: CollectionEntry<'workshops'>;
+}
+
+const { workshop } = Astro.props;
+const { title, date, location, tags, speakers, slides, resources, videos, facebookEventUrl } = workshop.data;
+const links = [
+	{ heading: 'Slides', items: slides },
+	{ heading: 'Resources', items: resources },
+	{ heading: 'Videos', items: videos },
+].filter(({ items }) => items && items.length > 0);
+---
+
+<article class="panel">
+	<header class="panel-bar label">
+		<a href="/workshops/">~#DEV102 / workshops</a>
+	</header>
+	<div class="panel-body stagger">
+		<h1 class="panel-title" transition:name={`workshop-${workshop.id}`}>{title}</h1>
+		<dl class="facts">
+			<div class="fact-line"><dt class="label">!#when :</dt><dd class="fact-value"><time datetime={date.toISOString()}>{formatWorkshopDate(date)}</time></dd></div>
+			<div class="fact-line"><dt class="label">!#where :</dt><dd class="fact-value">{location}</dd></div>
+		</dl>
+		{tags && tags.length > 0 && <ul class="tags" aria-label="Topics">{tags.map((tag) => <li>{tag}</li>)}</ul>}
+		{facebookEventUrl && (
+			<div class="actions">
+				<a class="button button-primary" href={facebookEventUrl} target="_blank" rel="noreferrer">Facebook event <span aria-hidden="true">↗</span></a>
+			</div>
+		)}
+
+		<div class="event-body"><slot /></div>
+
+		{speakers && speakers.length > 0 && (
+			<section class="event-section" aria-labelledby="speakers-heading">
+				<h2 id="speakers-heading" class="section-heading label">!#speakers :</h2>
+				<ul>{speakers.map((speaker) => (
+					<li>
+						{speaker.link ? <a href={speaker.link} target="_blank" rel="noreferrer">{speaker.name}</a> : speaker.name}
+						{speaker.role && <span> — {speaker.role}</span>}
+					</li>
+				))}</ul>
+			</section>
+		)}
+
+		{links.map(({ heading, items }) => (
+			<section class="event-section" aria-label={heading}>
+				<h2 class="section-heading label">!#{heading.toLowerCase()} :</h2>
+				<ul>{items!.map((item) => <li><a href={item.url} target="_blank" rel="noreferrer">{item.label}</a></li>)}</ul>
+			</section>
+		))}
+	</div>
+</article>
+
+<style>
+	.panel-bar a {
+		text-decoration: none;
+	}
+
+	.panel-bar a:hover {
+		text-decoration: underline;
+	}
+
+	.panel-title {
+		max-width: 16ch;
+	}
+
+	.event-body {
+		max-width: 68ch;
+		margin-top: var(--space-5);
+	}
+
+	.event-section {
+		margin-top: var(--space-5);
+	}
+
+	.event-section ul {
+		margin: 0;
+		padding-left: var(--space-4);
+	}
+
+	.event-section li + li {
+		margin-top: var(--space-2);
+	}
+</style>

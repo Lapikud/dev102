@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import WorkshopDetails from '../../components/WorkshopDetails.astro';
+import { LAPIKUD_URL } from '../../consts';
+import { formatWorkshopDate } from '../../lib/workshops.ts';
+
+export async function getStaticPaths() {
+	const workshops = await getCollection('workshops');
+	return workshops.map((workshop) => ({
+		params: { slug: workshop.id },
+		props: { workshop },
+	}));
+}
+
+const { workshop } = Astro.props;
+const { Content } = await render(workshop);
+const { title, date, location } = workshop.data;
+
+const singleLineTitle = title.replace(/\s+/g, ' ');
+const description = `${singleLineTitle}: a hands-on DEV102 workshop by Lapikud on ${formatWorkshopDate(date)} in ${location}, TalTech.`;
+const eventStructuredData = {
+	'@context': 'https://schema.org',
+	'@type': 'Event',
+	name: singleLineTitle,
+	description,
+	startDate: date.toISOString(),
+	eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+	eventStatus: 'https://schema.org/EventScheduled',
+	location: {
+		'@type': 'Place',
+		name: `${location}, TalTech`,
+		address: { '@type': 'PostalAddress', addressLocality: 'Tallinn', addressCountry: 'EE' },
+	},
+	organizer: { '@type': 'Organization', name: 'Lapikud', url: LAPIKUD_URL },
+	url: new URL(Astro.url.pathname, Astro.site).href,
+	image: new URL('og.png', Astro.site).href,
+};
+const scriptSafeJson = JSON.stringify(eventStructuredData).replaceAll('<', '\\u003c');
+---
+
+<SiteLayout pageTitle={singleLineTitle} description={description}>
+	<script slot="head" type="application/ld+json" is:inline set:html={scriptSafeJson} />
+	<WorkshopDetails workshop={workshop}>
+		<Content />
+	</WorkshopDetails>
+</SiteLayout>
