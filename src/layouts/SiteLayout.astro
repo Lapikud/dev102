@@ -1,0 +1,44 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import DotField from '../components/DotField.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { ClientRouter } from 'astro:transitions';
+import { SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	pageTitle?: string;
+	description?: string;
+}
+
+const { pageTitle, description = SITE_DESCRIPTION } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead pageTitle={pageTitle} description={description} />
+		<ClientRouter />
+		<slot name="head" />
+	</head>
+	<body>
+		<DotField />
+		<Header />
+		<main id="main-content">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	#main-content {
+		display: flex;
+		flex-direction: column;
+		width: calc(100% - var(--page-gutter) - var(--page-gutter));
+		max-width: var(--content-page);
+		flex: 1;
+		margin-inline: auto;
+		padding-block: clamp(28px, 4vw, 64px);
+	}
+</style>

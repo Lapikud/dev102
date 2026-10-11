@@ -1,52 +1,57 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
-import type { ImageMetadata } from 'astro';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import { SITE_TITLE } from '../consts';
-import { Font } from 'astro:assets';
+import "../styles/global.css";
+import { SEO } from "astro-seo";
+import redHatDisplay from "../assets/fonts/red-hat-display-latin.woff2?url";
+import jetBrainsMono from "../assets/fonts/jetbrains-mono-latin.woff2?url";
+import syncopateBold from "../assets/fonts/syncopate-bold-latin.woff2?url";
+import { SOCIAL_CARD_SIZE } from "../lib/brand-images.ts";
+import { SITE_TITLE } from "../consts";
 
 interface Props {
-	title: string;
-	description: string;
-	image?: ImageMetadata;
+  pageTitle?: string;
+  description: string;
 }
 
+const { pageTitle, description } = Astro.props;
+const aboveTheFoldFonts = [redHatDisplay, jetBrainsMono, syncopateBold];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
-const { title, description, image = FallbackImage } = Astro.props;
+const socialCardURL = new URL("og.png", Astro.site);
 ---
 
-<!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="icon" href="/favicon.ico" />
+{
+  aboveTheFoldFonts.map((font) => (
+    <link rel="preload" href={font} as="font" type="font/woff2" crossorigin />
+  ))
+}
+<SEO
+  title={pageTitle}
+  titleTemplate={`%s | ${SITE_TITLE}`}
+  titleDefault={SITE_TITLE}
+  description={description}
+  canonical={canonicalURL}
+  openGraph={{
+    basic: {
+      title: pageTitle ?? SITE_TITLE,
+      type: "website",
+      image: socialCardURL.href,
+      url: canonicalURL,
+    },
+    optional: { siteName: SITE_TITLE, description },
+    image: {
+      width: SOCIAL_CARD_SIZE.width,
+      height: SOCIAL_CARD_SIZE.height,
+      alt: "The DEV102 badge: the duck mascot coding at a laptop, with the Lapikud logo",
+    },
+  }}
+  twitter={{ card: "summary_large_image" }}
+/>
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
-	rel="alternate"
-	type="application/rss+xml"
-	title={SITE_TITLE}
-	href={new URL('rss.xml', Astro.site)}
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE_TITLE} Workshops`}
+  href={new URL("rss.xml", Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
-
-<Font cssVariable="--font-atkinson" preload />
-
-<!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
-
-<!-- Primary Meta Tags -->
-<title>{title}</title>
-<meta name="description" content={description} />
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image.src, Astro.url)} />
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
