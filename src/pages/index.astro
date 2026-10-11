@@ -1,59 +1,130 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getNextWorkshop, formatWorkshopDate } from "../lib/workshops";
+import { SITE_DESCRIPTION } from "../consts";
+import LapikudCard from "../components/LapikudCard.astro";
+import Countdown from "../components/Countdown.astro";
+
+const workshops = await getCollection("workshops");
+const nextWorkshop = getNextWorkshop(workshops);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to
-				build a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your{' '}
-				<code>astro.config.mjs</code> file. You can customize your setup with{' '}
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like
-				Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>
-					Edit this page in <code>src/pages/index.astro</code>
-				</li>
-				<li>
-					Edit the site header items in <code>src/components/Header.astro</code>
-				</li>
-				<li>
-					Add your name to the footer in <code>src/components/Footer.astro</code>
-				</li>
-				<li>
-					Check out the included blog posts in <code>src/content/blog/</code>
-				</li>
-				<li>
-					Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to{' '}
-				<a href="https://docs.astro.build/">read the docs</a> or{' '}
-				<a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out{' '}
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a> by{' '}
-				<a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<SiteLayout>
+  <div class="home-content stagger">
+    <section class="intro" aria-label="DEV102">
+      <h1 class="terminal-token">~#DEV102</h1>
+      <p>{SITE_DESCRIPTION}</p>
+    </section>
+
+    <section class="panel next-event" aria-labelledby="page-title">
+      {
+        nextWorkshop ? (
+          <>
+            <header class="panel-bar">
+              <Countdown date={nextWorkshop.data.date} />
+            </header>
+            <div class="panel-body">
+              <h2
+                id="page-title"
+                class="panel-title"
+                transition:name={`workshop-${nextWorkshop.id}`}
+              >
+                {nextWorkshop.data.title}
+              </h2>
+              <div class="facts">
+                <p class="fact-line">
+                  <span class="label">!#when :</span>
+                  <time
+                    class="fact-value"
+                    datetime={nextWorkshop.data.date.toISOString()}
+                  >
+                    {formatWorkshopDate(nextWorkshop.data.date)}
+                  </time>
+                </p>
+                <p class="fact-line">
+                  <span class="label">!#where :</span>
+                  <span class="fact-value">{nextWorkshop.data.location}</span>
+                </p>
+              </div>
+              <div class="actions">
+                <a
+                  class="button button-primary"
+                  href={`/workshops/${nextWorkshop.id}/`}
+                >
+                  Workshop details
+                </a>
+                {nextWorkshop.data.facebookEventUrl && (
+                  <a
+                    class="button"
+                    href={nextWorkshop.data.facebookEventUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Facebook event <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div class="panel-body">
+            <h2 id="page-title" class="panel-title">
+              No upcoming workshop
+            </h2>
+            <p>
+              Check the <a href="/workshops/">workshop archive</a> for past
+              sessions.
+            </p>
+          </div>
+        )
+      }
+    </section>
+
+    <LapikudCard />
+  </div>
+</SiteLayout>
+
+<style>
+  .home-content {
+    display: grid;
+    align-content: center;
+    gap: clamp(var(--space-4), 3vh, var(--space-5));
+  }
+
+  @media (min-width: 900px) {
+    .home-content {
+      grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.55fr);
+      grid-template-areas:
+        "intro event"
+        "lapikud event";
+      align-items: stretch;
+      flex: 1;
+    }
+
+    .intro {
+      grid-area: intro;
+    }
+
+    .next-event {
+      grid-area: event;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .next-event .panel-body {
+      flex: 1;
+      padding: clamp(var(--space-5), 3vw, var(--space-6));
+    }
+  }
+
+  @media (max-height: 760px) and (min-width: 900px) {
+    .next-event .panel-body {
+      padding-block: 20px;
+    }
+
+    .next-event .panel-title {
+      margin-bottom: 16px;
+    }
+  }
+</style>
