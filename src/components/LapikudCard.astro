@@ -1,56 +1,71 @@
 ---
-import { LAPIKUD_DESCRIPTION, LAPIKUD_URL } from '../consts';
-import lapikudLogo from '../assets/lapikud-logo.svg';
+import { LAPIKUD_DESCRIPTION, LAPIKUD_URL } from "../consts";
+import lapikudLogo from "../assets/lapikud-logo.svg";
 ---
 
 <section class="lapikud-card" aria-label="Lapikud">
-	<a class="lapikud-link" href={LAPIKUD_URL} target="_blank" rel="noreferrer" aria-label="Visit Lapikud website">
-		<img class="lapikud-logo" src={lapikudLogo.src} alt="Lapikud logo" width="240" height="88" loading="eager" />
-	</a>
-	<p>{LAPIKUD_DESCRIPTION}</p>
-	<a class="site-link" href={LAPIKUD_URL} target="_blank" rel="noreferrer">lapikud.ee <span aria-hidden="true">↗</span></a>
+  <a
+    class="lapikud-link"
+    href={LAPIKUD_URL}
+    target="_blank"
+    rel="noreferrer"
+    aria-label="Visit Lapikud website"
+  >
+    <img
+      class="lapikud-logo"
+      src={lapikudLogo.src}
+      alt="Lapikud logo"
+      width="240"
+      height="88"
+      loading="eager"
+    />
+  </a>
+  <p>{LAPIKUD_DESCRIPTION}</p>
+  <a class="site-link" href={LAPIKUD_URL} target="_blank" rel="noreferrer">
+    lapikud.ee <span aria-hidden="true">↗</span>
+  </a>
 </section>
 
 <style>
-	.lapikud-card {
-		display: flex;
-		align-items: flex-start;
-		flex-direction: column;
-		justify-content: center;
-		gap: 12px;
-		padding: 18px clamp(18px, 2.5vw, 28px);
-		background: var(--color-ink);
-		color: var(--color-paper);
-	}
+  .lapikud-card {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px clamp(18px, 2.5vw, 28px);
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
 
-	.lapikud-link {
-		display: inline-flex;
-		align-items: center;
-	}
+  .lapikud-link {
+    display: inline-flex;
+    align-items: center;
+  }
 
-	.lapikud-logo {
-		display: block;
-		width: min(180px, 100%);
-		height: auto;
-	}
+  .lapikud-logo {
+    display: block;
+    width: min(180px, 100%);
+    height: auto;
+  }
 
-	p {
-		max-width: 38ch;
-		margin: 0;
-		font-size: 0.76rem;
-		line-height: 1.4;
-	}
+  p {
+    max-width: 38ch;
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.4;
+  }
 
-	.site-link {
-		font-family: var(--font-mono);
-		font-size: 0.7rem;
-		font-weight: 700;
-	}
+  .site-link {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
 
-	@media (min-width: 900px) {
-		.lapikud-card {
-			grid-area: lapikud;
-			padding-block: 16px;
-		}
-	}
+  @media (min-width: 900px) {
+    .lapikud-card {
+      grid-area: lapikud;
+      padding-block: 16px;
+    }
+  }
 </style>

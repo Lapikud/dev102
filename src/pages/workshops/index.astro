@@ -17,44 +17,44 @@ const past = getPastWorkshops(workshops);
         Hands-on sessions for learning, sharing, and making things together.
       </p>
       <div class="actions">
-        <a class="button" href="/rss.xml">RSS feed</a>
+        <a class="button" href="/rss.xml">
+          RSS feed
+        </a>
       </div>
     </header>
 
     <section aria-labelledby="upcoming-heading">
-      <h2 id="upcoming-heading" class="section-heading label">!#upcoming :</h2>
-      {
-        upcoming.length > 0 ? (
-          <div class="workshop-list stagger">
-            {upcoming.map((workshop, i) => (
-              <WorkshopCard
-                workshop={workshop}
-                label={i === 0 ? ">#next" : undefined}
-              />
-            ))}
-          </div>
-        ) : (
-          <p class="panel panel-body label">
-            No upcoming workshops yet. Check back soon.
-          </p>
-        )
-      }
+      <h2 id="upcoming-heading" class="section-heading label">
+        !#upcoming :
+      </h2>
+      {upcoming.length > 0 ? (
+        <div class="workshop-list stagger">
+          {upcoming.map((workshop, i) => (
+            <WorkshopCard
+              workshop={workshop}
+              label={i === 0 ? ">#next" : undefined}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="panel panel-body label">
+          No upcoming workshops yet. Check back soon.
+        </p>
+      )}
     </section>
 
-    {
-      past.length > 0 && (
-        <section aria-labelledby="past-heading">
-          <h2 id="past-heading" class="section-heading label">
-            !#archive :
-          </h2>
-          <div class="workshop-list stagger">
-            {past.map((workshop) => (
-              <WorkshopCard workshop={workshop} />
-            ))}
-          </div>
-        </section>
-      )
-    }
+    {past.length > 0 && (
+      <section aria-labelledby="past-heading">
+        <h2 id="past-heading" class="section-heading label">
+          !#archive :
+        </h2>
+        <div class="workshop-list stagger">
+          {past.map((workshop) => (
+            <WorkshopCard workshop={workshop} />
+          ))}
+        </div>
+      </section>
+    )}
   </div>
 </SiteLayout>
 

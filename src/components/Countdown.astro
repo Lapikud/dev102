@@ -23,7 +23,10 @@ const { date } = Astro.props;
     #timer?: number;
 
     connectedCallback() {
-      const target = new Date(this.dataset.target!).getTime();
+      const targetValue = this.dataset.target;
+      if (!targetValue) return;
+
+      const target = new Date(targetValue).getTime();
       const tick = () => {
         const remaining = target - Date.now();
         this.#render(formatCountdown(remaining));

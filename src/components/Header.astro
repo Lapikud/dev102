@@ -16,15 +16,20 @@ import duck from "../assets/duck.png";
       <span class="brand-token">~#DEV102</span>
     </a>
     <div class="nav-links">
-      <a href="/" aria-current={Astro.url.pathname === "/" ? "page" : undefined}
-        >Home</a
+      <a
+        href="/"
+        aria-current={Astro.url.pathname === "/" ? "page" : undefined}
       >
+        Home
+      </a>
       <a
         href="/workshops/"
-        aria-current={Astro.url.pathname.startsWith("/workshops")
-          ? "page"
-          : undefined}>Workshops</a
+        aria-current={
+          Astro.url.pathname.startsWith("/workshops") ? "page" : undefined
+        }
       >
+        Workshops
+      </a>
     </div>
   </nav>
 </header>
@@ -107,6 +112,5 @@ import duck from "../assets/duck.png";
       gap: 10px;
       font-size: 0.65rem;
     }
-
   }
 </style>

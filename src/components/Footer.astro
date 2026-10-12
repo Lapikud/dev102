@@ -1,51 +1,57 @@
 ---
-import { LAPIKUD_URL } from '../consts';
+import { LAPIKUD_URL } from "../consts";
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-	<div class="footer-inner">
-		<p>DEV102 is a workshop series by <a href={LAPIKUD_URL} target="_blank" rel="noreferrer">Lapikud</a>.</p>
-		<small class="footer-mark">&copy; {year} Lapikud</small>
-	</div>
+  <div class="footer-inner">
+    <p>
+      DEV102 is a workshop series by{" "}
+      <a href={LAPIKUD_URL} target="_blank" rel="noreferrer">
+        Lapikud
+      </a>
+      .
+    </p>
+    <small class="footer-mark">&copy; {year} Lapikud</small>
+  </div>
 </footer>
 
 <style>
-	.site-footer {
-		border-top: 1px solid rgb(255 255 255 / 18%);
-		background: var(--color-ink);
-		color: var(--color-paper);
-	}
+  .site-footer {
+    border-top: 1px solid rgb(255 255 255 / 18%);
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
 
-	.footer-inner {
-		display: flex;
-		width: calc(100% - var(--page-gutter) - var(--page-gutter));
-		max-width: var(--content-page);
-		min-height: 80px;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-3);
-		margin-inline: auto;
-		font-size: 0.85rem;
-	}
+  .footer-inner {
+    display: flex;
+    width: calc(100% - var(--page-gutter) - var(--page-gutter));
+    max-width: var(--content-page);
+    min-height: 80px;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-inline: auto;
+    font-size: 0.85rem;
+  }
 
-	.footer-inner p {
-		margin: 0;
-	}
+  .footer-inner p {
+    margin: 0;
+  }
 
-	.footer-mark {
-		font-family: var(--font-mono);
-		font-size: 0.68rem;
-		text-transform: uppercase;
-	}
+  .footer-mark {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
 
-	@media (max-width: 480px) {
-		.footer-inner {
-			align-items: flex-start;
-			flex-direction: column;
-			justify-content: center;
-			padding-block: var(--space-4);
-		}
-	}
+  @media (max-width: 480px) {
+    .footer-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      justify-content: center;
+      padding-block: var(--space-4);
+    }
+  }
 </style>

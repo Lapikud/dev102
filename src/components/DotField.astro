@@ -62,13 +62,24 @@
     }
 
     get #viewport() {
-      return { left: scrollX, top: scrollY, width: innerWidth, height: innerHeight };
+      return {
+        left: scrollX,
+        top: scrollY,
+        width: innerWidth,
+        height: innerHeight,
+      };
     }
 
     #randomVisibleDot(): PagePoint {
       return {
-        x: nearestDotCentre(scrollX + Math.random() * innerWidth, this.#dotSpacing),
-        y: nearestDotCentre(scrollY + Math.random() * innerHeight, this.#dotSpacing),
+        x: nearestDotCentre(
+          scrollX + Math.random() * innerWidth,
+          this.#dotSpacing,
+        ),
+        y: nearestDotCentre(
+          scrollY + Math.random() * innerHeight,
+          this.#dotSpacing,
+        ),
       };
     }
 
@@ -83,20 +94,31 @@
     #twinkleRandomDots = () => {
       if (!this.#motionAllowed) return;
       for (let i = 0; i < TWINKLES_PER_BURST; i++) {
-        this.#twinkles.push({ ...this.#randomVisibleDot(), start: performance.now(), strength: 1 });
+        this.#twinkles.push({
+          ...this.#randomVisibleDot(),
+          start: performance.now(),
+          strength: 1,
+        });
       }
       this.#ensureDrawing();
     };
 
     #sendAmbientWave = () => {
       if (!this.#motionAllowed) return;
-      this.#waves.push({ ...this.#randomVisibleDot(), start: performance.now(), strength: 1 });
+      this.#waves.push({
+        ...this.#randomVisibleDot(),
+        start: performance.now(),
+        strength: 1,
+      });
       this.#ensureDrawing();
     };
 
     #rippleWhereClicked = (event: PointerEvent) => {
       if (!this.#motionAllowed) return;
-      const clickedAt = { x: event.clientX + scrollX, y: event.clientY + scrollY };
+      const clickedAt = {
+        x: event.clientX + scrollX,
+        y: event.clientY + scrollY,
+      };
       const now = performance.now();
       for (const { delayMs, strength } of WATER_DROP_RINGS) {
         this.#waves.push({ ...clickedAt, start: now + delayMs, strength });
@@ -108,7 +130,11 @@
       this.#frame ||= requestAnimationFrame(this.#draw);
     }
 
-    #lightDot(ctx: CanvasRenderingContext2D, { x, y }: PagePoint, brightness: number) {
+    #lightDot(
+      ctx: CanvasRenderingContext2D,
+      { x, y }: PagePoint,
+      brightness: number,
+    ) {
       ctx.fillStyle = `rgb(255 255 255 / ${(brightness * 0.7).toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(x - scrollX, y - scrollY, 1.25 + brightness, 0, Math.PI * 2);
@@ -120,8 +146,12 @@
       const ctx = this.#ctx;
       if (!ctx) return;
       ctx.clearRect(0, 0, innerWidth, innerHeight);
-      this.#twinkles = this.#twinkles.filter(({ start }) => now - start < TWINKLE_DURATION_MS);
-      this.#waves = this.#waves.filter(({ start }) => now - start < WAVE_DURATION_MS);
+      this.#twinkles = this.#twinkles.filter(
+        ({ start }) => now - start < TWINKLE_DURATION_MS,
+      );
+      this.#waves = this.#waves.filter(
+        ({ start }) => now - start < WAVE_DURATION_MS,
+      );
 
       for (const twinkle of this.#twinkles) {
         this.#lightDot(ctx, twinkle, twinkleBrightness(now - twinkle.start));

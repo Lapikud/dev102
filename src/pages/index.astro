@@ -18,67 +18,65 @@ const nextWorkshop = getNextWorkshop(workshops);
     </section>
 
     <section class="panel next-event" aria-labelledby="page-title">
-      {
-        nextWorkshop ? (
-          <>
-            <header class="panel-bar">
-              <Countdown date={nextWorkshop.data.date} />
-            </header>
-            <div class="panel-body">
-              <h2
-                id="page-title"
-                class="panel-title"
-                transition:name={`workshop-${nextWorkshop.id}`}
-              >
-                {nextWorkshop.data.title}
-              </h2>
-              <div class="facts">
-                <p class="fact-line">
-                  <span class="label">!#when :</span>
-                  <time
-                    class="fact-value"
-                    datetime={nextWorkshop.data.date.toISOString()}
-                  >
-                    {formatWorkshopDate(nextWorkshop.data.date)}
-                  </time>
-                </p>
-                <p class="fact-line">
-                  <span class="label">!#where :</span>
-                  <span class="fact-value">{nextWorkshop.data.location}</span>
-                </p>
-              </div>
-              <div class="actions">
-                <a
-                  class="button button-primary"
-                  href={`/workshops/${nextWorkshop.id}/`}
-                >
-                  Workshop details
-                </a>
-                {nextWorkshop.data.facebookEventUrl && (
-                  <a
-                    class="button"
-                    href={nextWorkshop.data.facebookEventUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Facebook event <span aria-hidden="true">↗</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          </>
-        ) : (
+      {nextWorkshop ? (
+        <>
+          <header class="panel-bar">
+            <Countdown date={nextWorkshop.data.date} />
+          </header>
           <div class="panel-body">
-            <h2 id="page-title" class="panel-title">
-              No upcoming workshop
+            <h2
+              id="page-title"
+              class="panel-title"
+              transition:name={`workshop-${nextWorkshop.id}`}
+            >
+              {nextWorkshop.data.title}
             </h2>
-            <p>
-              Check the <a href="/workshops/">workshop archive</a> for past
-              sessions.
-            </p>
+            <div class="facts">
+              <p class="fact-line">
+                <span class="label">!#when :</span>
+                <time
+                  class="fact-value"
+                  datetime={nextWorkshop.data.date.toISOString()}
+                >
+                  {formatWorkshopDate(nextWorkshop.data.date)}
+                </time>
+              </p>
+              <p class="fact-line">
+                <span class="label">!#where :</span>
+                <span class="fact-value">{nextWorkshop.data.location}</span>
+              </p>
+            </div>
+            <div class="actions">
+              <a
+                class="button button-primary"
+                href={`/workshops/${nextWorkshop.id}/`}
+              >
+                Workshop details
+              </a>
+              {nextWorkshop.data.facebookEventUrl && (
+                <a
+                  class="button"
+                  href={nextWorkshop.data.facebookEventUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Facebook event <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </div>
           </div>
-        )
-      }
+        </>
+      ) : (
+        <div class="panel-body">
+          <h2 id="page-title" class="panel-title">
+            No upcoming workshop
+          </h2>
+          <p>
+            Check the <a href="/workshops/">workshop archive</a> for past
+            sessions.
+          </p>
+        </div>
+      )}
     </section>
 
     <LapikudCard />

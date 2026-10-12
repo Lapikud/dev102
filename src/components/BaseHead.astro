@@ -20,11 +20,9 @@ const socialCardURL = new URL("og.png", Astro.site);
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-{
-  aboveTheFoldFonts.map((font) => (
-    <link rel="preload" href={font} as="font" type="font/woff2" crossorigin />
-  ))
-}
+{aboveTheFoldFonts.map((font) => (
+  <link rel="preload" href={font} as="font" type="font/woff2" crossorigin />
+))}
 <SEO
   title={pageTitle}
   titleTemplate={`%s | ${SITE_TITLE}`}
