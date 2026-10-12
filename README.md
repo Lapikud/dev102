@@ -1,63 +1,47 @@
-# Astro Starter Kit: Blog
+# DEV102
+
+A workshop series site for Lapikud at TalTech, built with Astro. Each workshop lives in its own Markdown file so event content can be delegated and updated without editing page templates.
+
+## Add or update a workshop
+
+Create `src/content/workshops/<slug>.md`:
+
+```md
+---
+title: |-
+  IDEs &
+  Text Editors
+date: "2026-10-21T18:30:00+03:00"
+location: ICO-316
+tags:
+  - IDEs
+  - Text editors
+facebookEventUrl: https://www.facebook.com/events/...
+speakers:
+  - name: Speaker Name
+    role: Guest speaker
+    link: https://example.com
+slides:
+  - label: Presentation
+    url: https://example.com/slides
+resources:
+  - label: Editor setup guide
+    url: https://example.com/guide
+videos:
+  - label: Recording
+    url: https://example.com/video
+---
+
+Add the event description and any extra sections here in Markdown.
+```
+
+Required fields are `title`, `date` (ISO datetime with timezone offset), and `location`. All other frontmatter fields are optional; omit them when not available. The same `label`/`url` shape is used for slides, resources, and videos. Each file creates `/workshops/<slug>/`; the homepage automatically features the nearest upcoming event and the workshop index separates upcoming and past events. Event times display in `Europe/Tallinn`.
+
+## Development
 
 ```sh
-pnpm create astro@latest -- --template blog
+pnpm install
+pnpm dev
+pnpm build
+pnpm test
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
