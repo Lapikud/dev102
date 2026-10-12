@@ -1,0 +1,100 @@
+---
+interface Props {
+  date: Date;
+}
+
+const { date } = Astro.props;
+---
+
+<workshop-countdown
+  class="countdown"
+  data-target={date.toISOString()}
+  role="timer"
+  aria-label="Time until workshop"
+  aria-live="off"
+>
+  --d --h --m --s
+</workshop-countdown>
+
+<script>
+  import { formatCountdown } from "../lib/countdown.ts";
+
+  class WorkshopCountdown extends HTMLElement {
+    #timer?: number;
+
+    connectedCallback() {
+      const targetValue = this.dataset.target;
+      if (!targetValue) return;
+
+      const target = new Date(targetValue).getTime();
+      const tick = () => {
+        const remaining = target - Date.now();
+        this.#render(formatCountdown(remaining));
+        if (remaining <= 0) clearInterval(this.#timer);
+      };
+      tick();
+      this.#timer = window.setInterval(tick, 1000);
+    }
+
+    #render(text: string) {
+      const chars = [...text];
+      if (this.children.length !== chars.length) {
+        this.replaceChildren(...chars.map((char) => this.#char(char, false)));
+        return;
+      }
+
+      chars.forEach((char, i) => {
+        const current = this.children[i];
+        if (current.textContent !== char)
+          current.replaceWith(this.#char(char, true));
+      });
+    }
+
+    #char(char: string, animate: boolean) {
+      const span = document.createElement("span");
+      span.textContent = char;
+      if (animate) span.className = "tick";
+      return span;
+    }
+
+    disconnectedCallback() {
+      clearInterval(this.#timer);
+    }
+  }
+
+  customElements.define("workshop-countdown", WorkshopCountdown);
+</script>
+
+<style>
+  .countdown {
+    font-family: var(--font-accent);
+    font-size: var(--text-countdown);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .countdown :global(span) {
+    display: inline-block;
+    white-space: pre;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .countdown :global(.tick) {
+      animation: tick var(--duration-reveal) var(--ease-out);
+    }
+  }
+
+  @keyframes tick {
+    from {
+      opacity: 0.35;
+      transform: translateY(-0.12em);
+    }
+  }
+
+  .countdown:not(:defined) {
+    visibility: hidden;
+  }
+</style>

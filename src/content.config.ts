@@ -1,20 +1,30 @@
-import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
 
-const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: z.optional(image()),
-		}),
+const workshops = defineCollection({
+  loader: glob({ base: "./src/content/workshops", pattern: "**/*.{md,mdx}" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    location: z.string(),
+    tags: z.array(z.string()).optional(),
+    facebookEventUrl: z.url().optional(),
+    speakers: z
+      .array(
+        z.object({
+          name: z.string(),
+          role: z.string().optional(),
+          link: z.url().optional(),
+        }),
+      )
+      .optional(),
+    slides: z.array(z.object({ label: z.string(), url: z.url() })).optional(),
+    resources: z
+      .array(z.object({ label: z.string(), url: z.url() }))
+      .optional(),
+    videos: z.array(z.object({ label: z.string(), url: z.url() })).optional(),
+  }),
 });
 
-export const collections = { blog };
+export const collections = { workshops };

@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import WorkshopCard from "../../components/WorkshopCard.astro";
+import { getUpcomingWorkshops, getPastWorkshops } from "../../lib/workshops.ts";
+
+const workshops = await getCollection("workshops");
+const upcoming = getUpcomingWorkshops(workshops);
+const past = getPastWorkshops(workshops);
+---
+
+<SiteLayout pageTitle="Workshops">
+  <div class="workshops-page stagger">
+    <header class="intro">
+      <h1 class="terminal-token">~#DEV102/workshops</h1>
+      <p>
+        Hands-on sessions for learning, sharing, and making things together.
+      </p>
+      <div class="actions">
+        <a class="button" href="/rss.xml">
+          RSS feed
+        </a>
+      </div>
+    </header>
+
+    <section aria-labelledby="upcoming-heading">
+      <h2 id="upcoming-heading" class="section-heading label">
+        !#upcoming :
+      </h2>
+      {upcoming.length > 0 ? (
+        <div class="workshop-list stagger">
+          {upcoming.map((workshop, i) => (
+            <WorkshopCard
+              workshop={workshop}
+              label={i === 0 ? ">#next" : undefined}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="panel panel-body label">
+          No upcoming workshops yet. Check back soon.
+        </p>
+      )}
+    </section>
+
+    {past.length > 0 && (
+      <section aria-labelledby="past-heading">
+        <h2 id="past-heading" class="section-heading label">
+          !#archive :
+        </h2>
+        <div class="workshop-list stagger">
+          {past.map((workshop) => (
+            <WorkshopCard workshop={workshop} />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</SiteLayout>
+
+<style>
+  .workshops-page {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .workshop-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: var(--space-4);
+  }
+</style>

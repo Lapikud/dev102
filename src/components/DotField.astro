@@ -1,0 +1,186 @@
+<dot-field aria-hidden="true" transition:persist>
+  <canvas></canvas>
+</dot-field>
+
+<script>
+  import {
+    TWINKLE_DURATION_MS,
+    WAVE_DURATION_MS,
+    nearestDotCentre,
+    ringBrightness,
+    twinkleBrightness,
+    visibleDotCentres,
+    type PagePoint,
+    type Pulse,
+  } from "../lib/dot-field.ts";
+
+  const AMBIENT_WAVE_EVERY_MS = 9000;
+  const FIRST_AMBIENT_WAVE_AFTER_MS = 1200;
+  const TWINKLE_EVERY_MS = 700;
+  const TWINKLES_PER_BURST = 2;
+  const WATER_DROP_RINGS = [
+    { delayMs: 0, strength: 1 },
+    { delayMs: 220, strength: 0.55 },
+    { delayMs: 440, strength: 0.3 },
+  ];
+
+  class DotField extends HTMLElement {
+    #ctx: CanvasRenderingContext2D | null = null;
+    #dotSpacing = 0;
+    #twinkles: Pulse[] = [];
+    #waves: Pulse[] = [];
+    #frame = 0;
+    #timers: number[] = [];
+    #reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    connectedCallback() {
+      this.#ctx = this.querySelector("canvas")?.getContext("2d") ?? null;
+      this.#dotSpacing = parseFloat(
+        getComputedStyle(this).getPropertyValue("--dot-spacing"),
+      );
+      this.#fitToViewport();
+      addEventListener("resize", this.#fitToViewport);
+      addEventListener("pointerdown", this.#rippleWhereClicked);
+      this.#timers.push(
+        window.setInterval(this.#twinkleRandomDots, TWINKLE_EVERY_MS),
+        window.setInterval(this.#sendAmbientWave, AMBIENT_WAVE_EVERY_MS),
+        window.setTimeout(this.#sendAmbientWave, FIRST_AMBIENT_WAVE_AFTER_MS),
+      );
+    }
+
+    disconnectedCallback() {
+      removeEventListener("resize", this.#fitToViewport);
+      removeEventListener("pointerdown", this.#rippleWhereClicked);
+      this.#timers.forEach(clearTimeout);
+      this.#timers = [];
+      cancelAnimationFrame(this.#frame);
+      this.#frame = 0;
+    }
+
+    get #motionAllowed() {
+      return !document.hidden && !this.#reducedMotion.matches;
+    }
+
+    get #viewport() {
+      return {
+        left: scrollX,
+        top: scrollY,
+        width: innerWidth,
+        height: innerHeight,
+      };
+    }
+
+    #randomVisibleDot(): PagePoint {
+      return {
+        x: nearestDotCentre(
+          scrollX + Math.random() * innerWidth,
+          this.#dotSpacing,
+        ),
+        y: nearestDotCentre(
+          scrollY + Math.random() * innerHeight,
+          this.#dotSpacing,
+        ),
+      };
+    }
+
+    #fitToViewport = () => {
+      if (!this.#ctx) return;
+      const dpr = devicePixelRatio || 1;
+      this.#ctx.canvas.width = innerWidth * dpr;
+      this.#ctx.canvas.height = innerHeight * dpr;
+      this.#ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    #twinkleRandomDots = () => {
+      if (!this.#motionAllowed) return;
+      for (let i = 0; i < TWINKLES_PER_BURST; i++) {
+        this.#twinkles.push({
+          ...this.#randomVisibleDot(),
+          start: performance.now(),
+          strength: 1,
+        });
+      }
+      this.#ensureDrawing();
+    };
+
+    #sendAmbientWave = () => {
+      if (!this.#motionAllowed) return;
+      this.#waves.push({
+        ...this.#randomVisibleDot(),
+        start: performance.now(),
+        strength: 1,
+      });
+      this.#ensureDrawing();
+    };
+
+    #rippleWhereClicked = (event: PointerEvent) => {
+      if (!this.#motionAllowed) return;
+      const clickedAt = {
+        x: event.clientX + scrollX,
+        y: event.clientY + scrollY,
+      };
+      const now = performance.now();
+      for (const { delayMs, strength } of WATER_DROP_RINGS) {
+        this.#waves.push({ ...clickedAt, start: now + delayMs, strength });
+      }
+      this.#ensureDrawing();
+    };
+
+    #ensureDrawing() {
+      this.#frame ||= requestAnimationFrame(this.#draw);
+    }
+
+    #lightDot(
+      ctx: CanvasRenderingContext2D,
+      { x, y }: PagePoint,
+      brightness: number,
+    ) {
+      ctx.fillStyle = `rgb(255 255 255 / ${(brightness * 0.7).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(x - scrollX, y - scrollY, 1.25 + brightness, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    #draw = (now: number) => {
+      this.#frame = 0;
+      const ctx = this.#ctx;
+      if (!ctx) return;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      this.#twinkles = this.#twinkles.filter(
+        ({ start }) => now - start < TWINKLE_DURATION_MS,
+      );
+      this.#waves = this.#waves.filter(
+        ({ start }) => now - start < WAVE_DURATION_MS,
+      );
+
+      for (const twinkle of this.#twinkles) {
+        this.#lightDot(ctx, twinkle, twinkleBrightness(now - twinkle.start));
+      }
+      for (const wave of this.#waves) {
+        for (const dot of visibleDotCentres(this.#viewport, this.#dotSpacing)) {
+          const brightness = ringBrightness(wave, dot, now);
+          if (brightness > 0) this.#lightDot(ctx, dot, brightness);
+        }
+      }
+
+      if (this.#twinkles.length || this.#waves.length) this.#ensureDrawing();
+    };
+  }
+
+  customElements.define("dot-field", DotField);
+</script>
+
+<style>
+  dot-field {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
