@@ -40,6 +40,11 @@ const year = new Date().getFullYear();
     margin: 0;
   }
 
+  .footer-inner a,
+  .footer-mark {
+    color: #ff9f36;
+  }
+
   .footer-mark {
     font-family: var(--font-mono);
     font-size: 0.68rem;
@@ -52,6 +57,12 @@ const year = new Date().getFullYear();
       flex-direction: column;
       justify-content: center;
       padding-block: var(--space-4);
+    }
+  }
+
+  @media (min-width: 900px) and (max-height: 900px) {
+    .footer-inner {
+      min-height: 56px;
     }
   }
 </style>
