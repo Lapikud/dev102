@@ -32,12 +32,13 @@
 
 :root {
   color-scheme: light;
-  --color-orange: #ff9f36;
+  --color-orange: #181818;
   --color-orange-light: #ffa80d;
   --color-orange-dark: #d67d0a;
   --color-lapikud-orange: #f0941d;
+  --color-card: #131212;
   --color-paper: #fff;
-  --color-ink: #0d0d0d;
+  --color-ink: #111111;
 
   --font-display: "Red Hat Display", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -202,7 +203,7 @@ pre,
 .panel {
   min-width: 0;
   border: 2px solid var(--color-ink);
-  background: var(--color-orange);
+  background: var(--color-card);
 }
 
 .panel-bar {

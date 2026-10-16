@@ -33,9 +33,11 @@ import lapikudLogo from "../assets/lapikud-logo.svg";
     flex-direction: column;
     justify-content: center;
     gap: 12px;
-    padding: 18px clamp(18px, 2.5vw, 28px);
-    background: var(--color-ink);
+    padding: 12px clamp(12px, 1.75vw, 20px);
+    border: 2px solid #ff9f36;
+    background: var(--color-card);
     color: var(--color-paper);
+    box-shadow: 4px 4px 0 #ff9f36;
   }
 
   .lapikud-link {
@@ -65,7 +67,7 @@ import lapikudLogo from "../assets/lapikud-logo.svg";
   @media (min-width: 900px) {
     .lapikud-card {
       grid-area: lapikud;
-      padding-block: 16px;
+      padding-block: 12px;
     }
   }
 </style>
