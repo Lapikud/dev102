@@ -93,7 +93,7 @@ body {
   margin: 0;
   background-color: var(--color-orange);
   background-image: radial-gradient(
-    rgb(255 255 255 / 22%) 1.25px,
+    rgb(255 255 255 / 25%) 1.5px,
     transparent 1.25px
   );
   background-size: var(--dot-spacing) var(--dot-spacing);
