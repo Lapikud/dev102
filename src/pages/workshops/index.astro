@@ -25,7 +25,7 @@ const past = getPastWorkshops(workshops);
 
     <section aria-labelledby="upcoming-heading">
       <h2 id="upcoming-heading" class="section-heading label">
-        !#upcoming :
+        !#Future workshops :
       </h2>
       {upcoming.length > 0 ? (
         <div class="workshop-list stagger">
@@ -33,6 +33,8 @@ const past = getPastWorkshops(workshops);
             <WorkshopCard
               workshop={workshop}
               label={i === 0 ? ">#next" : undefined}
+              isNext={i === 0}
+              isUpcoming
             />
           ))}
         </div>
@@ -44,7 +46,7 @@ const past = getPastWorkshops(workshops);
     </section>
 
     {past.length > 0 && (
-      <section aria-labelledby="past-heading">
+      <section class="archive-section" aria-labelledby="past-heading">
         <h2 id="past-heading" class="section-heading label">
           !#archive :
         </h2>
@@ -59,14 +61,23 @@ const past = getPastWorkshops(workshops);
 </SiteLayout>
 
 <style>
+  #upcoming-heading {
+    color: var(--color-orange-light);
+  }
+
   .workshops-page {
     display: grid;
     gap: var(--space-6);
+    padding: clamp(var(--space-3), 3vw, var(--space-5));
+    border: 2px solid #ff9f36;
+    background-color: var(--color-card);
+    box-shadow: 0px 4px 0 #ff9f36;
   }
 
   .workshop-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
     gap: var(--space-4);
+    color: var(--color-orange-light);
   }
 </style>

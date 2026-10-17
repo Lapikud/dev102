@@ -7,7 +7,7 @@ const { date } = Astro.props;
 ---
 
 <div class="countdown-wrap">
-  <p class="event-label">Next event</p>
+  <p class="event-label">Upcoming workshop in :</p>
   <workshop-countdown
     class="countdown"
     data-target={date.toISOString()}
@@ -88,7 +88,7 @@ const { date } = Astro.props;
     margin: 0;
     color: var(--color-ink);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
