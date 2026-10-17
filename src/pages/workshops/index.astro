@@ -16,16 +16,11 @@ const past = getPastWorkshops(workshops);
       <p>
         Hands-on sessions for learning, sharing, and making things together.
       </p>
-      <div class="actions">
-        <a class="button" href="/rss.xml">
-          RSS feed
-        </a>
-      </div>
     </header>
 
     <section aria-labelledby="upcoming-heading">
       <h2 id="upcoming-heading" class="section-heading label">
-        !#Future workshops :
+        !#<span class="heading-title">WORKSHOPS</span> :
       </h2>
       {upcoming.length > 0 ? (
         <div class="workshop-list stagger">
@@ -62,6 +57,10 @@ const past = getPastWorkshops(workshops);
 
 <style>
   #upcoming-heading {
+    color: var(--color-paper);
+  }
+
+  #upcoming-heading .heading-title {
     color: var(--color-orange-light);
   }
 
