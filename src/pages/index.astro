@@ -14,7 +14,6 @@ const nextWorkshop = getNextWorkshop(workshops);
   <div class="home-content stagger">
     <section class="intro" aria-label="DEV102">
       <h2 class="intro-title">
-        What is{" "}
         <span class="terminal-token">~#DEV102</span>?
       </h2>
       <p>
@@ -107,8 +106,9 @@ const nextWorkshop = getNextWorkshop(workshops);
 
   .next-event .panel-title {
     max-width: none;
-    font-size: clamp(1.75rem, 7vw, 5rem);
-    white-space: nowrap;
+    font-size: clamp(1.6rem, 6vw, 4rem);
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 
   .next-event {
@@ -117,8 +117,13 @@ const nextWorkshop = getNextWorkshop(workshops);
   }
 
   .next-event .panel-bar {
+    padding: var(--space-2) var(--space-3);
     background: #ff9f36;
     color: var(--color-ink);
+  }
+
+  .next-event .panel-body {
+    padding: clamp(var(--space-3), 2vw, var(--space-4));
   }
 
   .next-event .panel-title,
@@ -181,10 +186,6 @@ const nextWorkshop = getNextWorkshop(workshops);
       grid-area: event;
       display: flex;
       flex-direction: column;
-    }
-
-    .next-event .panel-body {
-      padding: clamp(var(--space-3), 2vw, var(--space-4));
     }
 
     .next-event .workshop-body {
