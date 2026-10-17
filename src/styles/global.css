@@ -32,12 +32,13 @@
 
 :root {
   color-scheme: light;
-  --color-orange: #ff9f36;
   --color-orange-light: #ffa80d;
   --color-orange-dark: #d67d0a;
   --color-lapikud-orange: #f0941d;
+  --color-card: #131212;
   --color-paper: #fff;
-  --color-ink: #0d0d0d;
+  --color-ink: #111111;
+  --color-lighter-ink: #181818;
 
   --font-display: "Red Hat Display", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -91,9 +92,9 @@ body {
   min-height: 100vh;
   flex-direction: column;
   margin: 0;
-  background-color: var(--color-orange);
+  background-color: var(--color-lighter-ink);
   background-image: radial-gradient(
-    rgb(255 255 255 / 22%) 1.25px,
+    rgb(255 255 255 / 25%) 1.5px,
     transparent 1.25px
   );
   background-size: var(--dot-spacing) var(--dot-spacing);
@@ -197,12 +198,13 @@ pre,
 .intro {
   max-width: 38ch;
   font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: var(--color-paper);
 }
 
 .panel {
   min-width: 0;
   border: 2px solid var(--color-ink);
-  background: var(--color-orange);
+  background: var(--color-card);
 }
 
 .panel-bar {
@@ -255,8 +257,8 @@ pre,
 
 .button {
   padding: var(--space-2) var(--space-3);
-  border: 2px solid var(--color-ink);
-  background: var(--color-orange);
+  border: 3.4px solid var(--color-ink);
+  background: var(--color-lighter-ink);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
@@ -318,7 +320,7 @@ pre,
 .section-heading {
   margin-bottom: var(--space-3);
   padding-bottom: var(--space-2);
-  border-bottom: 2px solid var(--color-ink);
+  border-bottom: 2px solid var(--color-paper);
 }
 
 @keyframes rise {

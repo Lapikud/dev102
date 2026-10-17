@@ -14,6 +14,7 @@ const year = new Date().getFullYear();
       .
     </p>
     <small class="footer-mark">&copy; {year} Lapikud</small>
+    <a class="footer-rss" href="/rss.xml">RSS feed</a>
   </div>
 </footer>
 
@@ -40,10 +41,24 @@ const year = new Date().getFullYear();
     margin: 0;
   }
 
+  .footer-inner a,
   .footer-mark {
+    color: #ff9f36;
+  }
+
+  .footer-mark {
+    margin-left: auto;
     font-family: var(--font-mono);
     font-size: 0.68rem;
     text-transform: uppercase;
+  }
+
+  .footer-rss {
+    align-self: center;
+    margin-left: var(--space-3);
+    color: #ff9f36;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
   }
 
   @media (max-width: 480px) {
@@ -52,6 +67,22 @@ const year = new Date().getFullYear();
       flex-direction: column;
       justify-content: center;
       padding-block: var(--space-4);
+    }
+
+    .footer-rss {
+      align-self: center;
+      margin-left: 0;
+    }
+
+    .footer-mark {
+      align-self: center;
+      margin-left: 0;
+    }
+  }
+
+  @media (min-width: 900px) and (max-height: 900px) {
+    .footer-inner {
+      min-height: 56px;
     }
   }
 </style>

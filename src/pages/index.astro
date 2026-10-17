@@ -13,7 +13,9 @@ const nextWorkshop = getNextWorkshop(workshops);
 <SiteLayout>
   <div class="home-content stagger">
     <section class="intro" aria-label="DEV102">
-      <h1 class="terminal-token">~#DEV102</h1>
+      <h2 class="intro-title">
+        <span class="terminal-token">~#DEV102</span>?
+      </h2>
       <p>
         {SITE_DESCRIPTION} Inspired by <a
           href="https://missing.csail.mit.edu/"
@@ -32,28 +34,30 @@ const nextWorkshop = getNextWorkshop(workshops);
           <header class="panel-bar">
             <Countdown date={nextWorkshop.data.date} />
           </header>
-          <div class="panel-body">
-            <h2
-              id="page-title"
-              class="panel-title"
-              transition:name={`workshop-${nextWorkshop.id}`}
-            >
-              {nextWorkshop.data.title}
-            </h2>
-            <div class="facts">
-              <p class="fact-line">
-                <span class="label">!#when :</span>
-                <time
-                  class="fact-value"
-                  datetime={nextWorkshop.data.date.toISOString()}
-                >
-                  {formatWorkshopDate(nextWorkshop.data.date)}
-                </time>
-              </p>
-              <p class="fact-line">
-                <span class="label">!#where :</span>
-                <span class="fact-value">{nextWorkshop.data.location}</span>
-              </p>
+          <div class="panel-body workshop-body">
+            <div class="workshop-info">
+              <h2
+                id="page-title"
+                class="panel-title"
+                transition:name={`workshop-${nextWorkshop.id}`}
+              >
+                {nextWorkshop.data.title}
+              </h2>
+              <div class="facts">
+                <p class="fact-line">
+                  <span class="label">!#when :</span>
+                  <time
+                    class="fact-value"
+                    datetime={nextWorkshop.data.date.toISOString()}
+                  >
+                    {formatWorkshopDate(nextWorkshop.data.date)}
+                  </time>
+                </p>
+                <p class="fact-line">
+                  <span class="label">!#where :</span>
+                  <span class="fact-value">{nextWorkshop.data.location}</span>
+                </p>
+              </div>
             </div>
             <div class="actions">
               <a
@@ -97,20 +101,85 @@ const nextWorkshop = getNextWorkshop(workshops);
     display: grid;
     align-content: center;
     gap: clamp(var(--space-4), 3vh, var(--space-5));
+    min-height: 0;
+  }
+
+  .next-event .panel-title {
+    max-width: none;
+    font-size: clamp(1.6rem, 6vw, 4rem);
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .next-event {
+    border-color: #ff9f36;
+    color: var(--color-paper);
+  }
+
+  .next-event .panel-bar {
+    padding: var(--space-2) var(--space-3);
+    background: #ff9f36;
+    color: var(--color-ink);
+  }
+
+  .next-event .panel-body {
+    padding: clamp(var(--space-3), 2vw, var(--space-4));
+  }
+
+  .next-event .panel-title,
+  .next-event .label {
+    color: #ff9f36;
+  }
+
+  .next-event .facts {
+    border-color: #ff9f36;
+  }
+
+  .next-event .button {
+    border-color: #ff9f36;
+    background: var(--color-ink);
+    color: #ff9f36;
+  }
+
+  .next-event .button-primary,
+  .next-event .button:hover {
+    background: #ff9f36;
+    color: var(--color-ink);
+  }
+
+  .intro {
+    padding: clamp(var(--space-2), 1.5vw, var(--space-3));
+    border: 2px solid #ff9f36;
+    background: var(--color-card);
+    color: #ffffff;
+    box-shadow: 0px 4px 0 #ff9f36;
+  }
+
+  .intro-title {
+    margin-bottom: var(--space-2);
+    color: var(--color-paper);
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+  }
+
+  .intro-title .terminal-token {
+    color: #ff9f36;
+    font-size: inherit;
   }
 
   @media (min-width: 900px) {
     .home-content {
-      grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.55fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-areas:
-        "intro event"
-        "lapikud event";
+        "event event"
+        "intro lapikud";
       align-items: stretch;
       flex: 1;
+      gap: var(--space-3);
     }
 
     .intro {
       grid-area: intro;
+      align-self: center;
     }
 
     .next-event {
@@ -119,19 +188,28 @@ const nextWorkshop = getNextWorkshop(workshops);
       flex-direction: column;
     }
 
-    .next-event .panel-body {
-      flex: 1;
-      padding: clamp(var(--space-5), 3vw, var(--space-6));
+    .next-event .workshop-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-4);
     }
+
+    .next-event .actions {
+      display: grid;
+      justify-items: stretch;
+      margin-top: 0;
+    }
+
   }
 
-  @media (max-height: 760px) and (min-width: 900px) {
+  @media (max-height: 900px) and (min-width: 900px) {
     .next-event .panel-body {
-      padding-block: 20px;
+      padding-block: 16px;
     }
 
     .next-event .panel-title {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
   }
 </style>

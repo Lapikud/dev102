@@ -88,8 +88,9 @@ import duck from "../assets/duck.png";
   }
 
   .nav-links a[aria-current="page"] {
+    color: #ff9f36;
     text-decoration: underline;
-    text-decoration-color: var(--color-orange);
+    text-decoration-color: #ff9f36;
     text-decoration-thickness: 3px;
     text-underline-offset: 7px;
   }
@@ -111,6 +112,12 @@ import duck from "../assets/duck.png";
     .nav-links {
       gap: 10px;
       font-size: 0.65rem;
+    }
+  }
+
+  @media (min-width: 900px) and (max-height: 900px) {
+    .site-nav {
+      min-height: 64px;
     }
   }
 </style>
