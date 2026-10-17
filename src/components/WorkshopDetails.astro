@@ -65,6 +65,9 @@ const links = [
       </div>
     )}
 
+    <h2 class="section-heading learning-heading label">
+      !#what will you learn? :
+    </h2>
     <div class="event-body">
       <slot />
     </div>
@@ -109,25 +112,51 @@ const links = [
 </article>
 
 <style>
+  .panel {
+    border-color: #ff9f36;
+  }
+
   .panel-bar a {
     text-decoration: none;
   }
 
   .panel-bar a:hover {
     text-decoration: underline;
+    color: var(--color-orange-light);
+  }
+
+  .panel-body {
+    color: var(--color-paper);
   }
 
   .panel-title {
     max-width: 16ch;
+    color: var(--color-orange-light);
+  }
+
+  .facts {
+    border-color: var(--color-orange-light);
   }
 
   .event-body {
     max-width: 68ch;
     margin-top: var(--space-5);
+    color: var(--color-orange-light);
+  }
+
+  .actions .button-primary {
+    border-color: var(--color-orange-light);
+    background: var(--color-orange-light);
+    color: var(--color-ink);
+  }
+
+  .learning-heading {
+    margin-top: var(--space-5);
   }
 
   .event-section {
     margin-top: var(--space-5);
+    color: var(--color-paper);
   }
 
   .event-section ul {
