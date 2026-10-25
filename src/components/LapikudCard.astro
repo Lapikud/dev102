@@ -3,7 +3,7 @@ import { LAPIKUD_DESCRIPTION, LAPIKUD_URL } from "../consts";
 import lapikudLogo from "../assets/lapikud-logo.svg";
 ---
 
-<section class="lapikud-card" aria-label="Lapikud">
+<section class="lapikud-card on-ink" aria-label="Lapikud">
   <a
     class="lapikud-link"
     href={LAPIKUD_URL}
@@ -31,13 +31,10 @@ import lapikudLogo from "../assets/lapikud-logo.svg";
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    justify-content: center;
     gap: 12px;
     padding: 12px clamp(12px, 1.75vw, 20px);
-    border: 2px solid #ff9f36;
-    background: var(--color-card);
-    color: var(--color-paper);
-    box-shadow: 0 4px 0 #ff9f36;
+    border: 2px solid var(--color-accent);
+    box-shadow: 0 4px 0 var(--color-accent);
   }
 
   .lapikud-link {
