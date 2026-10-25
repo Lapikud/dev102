@@ -68,7 +68,7 @@ const links = [
     {speakers && speakers.length > 0 && (
       <section class="event-section" aria-labelledby="speakers-heading">
         <h2 id="speakers-heading" class="section-heading label">
-          !#speakers :
+          {speakers.length > 1 ? "!#speakers :" : "!#speaker :"}
         </h2>
         <ul>
           {speakers.map((speaker) => (
