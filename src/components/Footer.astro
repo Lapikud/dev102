@@ -4,7 +4,7 @@ import { LAPIKUD_URL } from "../consts";
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<footer class="site-footer on-ink" transition:persist="site-footer">
   <div class="footer-inner">
     <p>
       DEV102 is a workshop series by{" "}
@@ -14,15 +14,15 @@ const year = new Date().getFullYear();
       .
     </p>
     <small class="footer-mark">&copy; {year} Lapikud</small>
-    <a class="footer-rss" href="/rss.xml">RSS feed</a>
+    <a class="footer-rss" href="/rss.xml">
+      RSS feed
+    </a>
   </div>
 </footer>
 
 <style>
   .site-footer {
     border-top: 1px solid rgb(255 255 255 / 18%);
-    background: var(--color-ink);
-    color: var(--color-paper);
   }
 
   .footer-inner {
@@ -43,7 +43,7 @@ const year = new Date().getFullYear();
 
   .footer-inner a,
   .footer-mark {
-    color: #ff9f36;
+    color: var(--color-orange);
   }
 
   .footer-mark {
@@ -56,27 +56,28 @@ const year = new Date().getFullYear();
   .footer-rss {
     align-self: center;
     margin-left: var(--space-3);
-    color: #ff9f36;
+    color: var(--color-orange);
     font-family: var(--font-mono);
     font-size: 0.75rem;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 899px) {
     .footer-inner {
-      align-items: flex-start;
-      flex-direction: column;
-      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-2) var(--space-3);
       padding-block: var(--space-4);
     }
 
-    .footer-rss {
-      align-self: center;
-      margin-left: 0;
+    .footer-inner p {
+      flex-basis: 100%;
     }
 
     .footer-mark {
-      align-self: center;
       margin-left: 0;
+    }
+
+    .footer-rss {
+      margin-left: auto;
     }
   }
 
