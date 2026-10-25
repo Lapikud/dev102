@@ -3,12 +3,18 @@ import { formatInTimeZone } from "date-fns-tz";
 
 type Dated = { data: { date: Date } };
 
+export const WORKSHOP_RUNTIME_MS = 3 * 60 * 60 * 1000; // 3 hours
+
+export function isWorkshopOver(date: Date, now = new Date()): boolean {
+  return !isBefore(now, new Date(date.getTime() + WORKSHOP_RUNTIME_MS));
+}
+
 export function getUpcomingWorkshops<T extends Dated>(
   workshops: T[],
   now = new Date(),
 ): T[] {
   return workshops
-    .filter(({ data }) => !isBefore(data.date, now))
+    .filter(({ data }) => !isWorkshopOver(data.date, now))
     .sort((a, b) => compareAsc(a.data.date, b.data.date));
 }
 
@@ -17,15 +23,14 @@ export function getPastWorkshops<T extends Dated>(
   now = new Date(),
 ): T[] {
   return workshops
-    .filter(({ data }) => isBefore(data.date, now))
+    .filter(({ data }) => isWorkshopOver(data.date, now))
     .sort((a, b) => compareAsc(b.data.date, a.data.date));
 }
 
-export function getNextWorkshop<T extends Dated>(
-  workshops: T[],
-  now = new Date(),
-): T | null {
-  return getUpcomingWorkshops(workshops, now)[0] ?? null;
+const speakerList = new Intl.ListFormat("en", { type: "conjunction" });
+
+export function formatSpeakers(speakers: { name: string }[] = []): string {
+  return speakerList.format(speakers.map(({ name }) => name));
 }
 
 export function formatWorkshopDate(date: Date): string {

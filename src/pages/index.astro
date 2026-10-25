@@ -1,23 +1,29 @@
 ---
 import { getCollection } from "astro:content";
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { getNextWorkshop, formatWorkshopDate } from "../lib/workshops";
+import {
+  getUpcomingWorkshops,
+  formatSpeakers,
+  formatWorkshopDate,
+} from "../lib/workshops";
 import { SITE_DESCRIPTION } from "../consts";
 import LapikudCard from "../components/LapikudCard.astro";
 import Countdown from "../components/Countdown.astro";
+import Tags from "../components/Tags.astro";
 
 const workshops = await getCollection("workshops");
-const nextWorkshop = getNextWorkshop(workshops);
+const upcoming = getUpcomingWorkshops(workshops);
 ---
 
 <SiteLayout>
-  <div class="home-content stagger">
+  <div class="home-content">
     <section class="intro" aria-label="DEV102">
-      <h2 class="intro-title">
-        <span class="terminal-token">~#DEV102</span>?
-      </h2>
+      <h1 class="intro-title">
+        <span class="terminal-token">~#DEV102</span>
+      </h1>
       <p>
-        {SITE_DESCRIPTION} Inspired by <a
+        {SITE_DESCRIPTION} Inspired by{" "}
+        <a
           href="https://missing.csail.mit.edu/"
           target="_blank"
           rel="noreferrer"
@@ -28,48 +34,72 @@ const nextWorkshop = getNextWorkshop(workshops);
       </p>
     </section>
 
-    <section class="panel next-event" aria-labelledby="page-title">
-      {nextWorkshop ? (
-        <>
+    <a class="button button-primary all-workshops" href="/workshops/">
+      Check out the workshops
+    </a>
+
+    <next-workshop>
+      {upcoming.map((workshop, i) => (
+        <section
+          class="panel next-event"
+          aria-labelledby={`title-${workshop.id}`}
+          data-starts={workshop.data.date.toISOString()}
+          hidden={i > 0}
+        >
           <header class="panel-bar">
-            <Countdown date={nextWorkshop.data.date} />
+            <Countdown date={workshop.data.date} />
           </header>
           <div class="panel-body workshop-body">
             <div class="workshop-info">
               <h2
-                id="page-title"
+                id={`title-${workshop.id}`}
                 class="panel-title"
-                transition:name={`workshop-${nextWorkshop.id}`}
+                transition:name={`workshop-${workshop.id}`}
               >
-                {nextWorkshop.data.title}
+                {workshop.data.title}
               </h2>
               <div class="facts">
                 <p class="fact-line">
                   <span class="label">!#when :</span>
                   <time
                     class="fact-value"
-                    datetime={nextWorkshop.data.date.toISOString()}
+                    datetime={workshop.data.date.toISOString()}
                   >
-                    {formatWorkshopDate(nextWorkshop.data.date)}
+                    {formatWorkshopDate(workshop.data.date)}
                   </time>
                 </p>
                 <p class="fact-line">
                   <span class="label">!#where :</span>
-                  <span class="fact-value">{nextWorkshop.data.location}</span>
+                  <span class="fact-value">{workshop.data.location}</span>
                 </p>
+                {workshop.data.speakers &&
+                  workshop.data.speakers.length > 0 && (
+                    <p class="fact-line">
+                      <span class="label">
+                        {workshop.data.speakers.length > 1
+                          ? "!#speakers :"
+                          : "!#speaker :"}
+                      </span>
+                      <span class="fact-value line-clamp speakers">
+                        {formatSpeakers(workshop.data.speakers)}
+                      </span>
+                    </p>
+                  )}
               </div>
+              <Tags tags={workshop.data.tags} />
+              <p class="excerpt line-clamp">{workshop.data.description}</p>
             </div>
             <div class="actions">
               <a
                 class="button button-primary"
-                href={`/workshops/${nextWorkshop.id}/`}
+                href={`/workshops/${workshop.id}/`}
               >
                 Workshop details
               </a>
-              {nextWorkshop.data.facebookEventUrl && (
+              {workshop.data.facebookEventUrl && (
                 <a
                   class="button"
-                  href={nextWorkshop.data.facebookEventUrl}
+                  href={workshop.data.facebookEventUrl}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -78,10 +108,16 @@ const nextWorkshop = getNextWorkshop(workshops);
               )}
             </div>
           </div>
-        </>
-      ) : (
+        </section>
+      ))}
+      <section
+        class="panel next-event"
+        aria-labelledby="no-workshop-title"
+        data-no-workshop
+        hidden={upcoming.length > 0}
+      >
         <div class="panel-body">
-          <h2 id="page-title" class="panel-title">
+          <h2 id="no-workshop-title" class="panel-title">
             No upcoming workshop
           </h2>
           <p>
@@ -89,14 +125,36 @@ const nextWorkshop = getNextWorkshop(workshops);
             sessions.
           </p>
         </div>
-      )}
-    </section>
+      </section>
+    </next-workshop>
 
     <LapikudCard />
   </div>
 </SiteLayout>
 
+<script>
+  import { isWorkshopOver } from "../lib/workshops.ts";
+
+  class NextWorkshop extends HTMLElement {
+    connectedCallback() {
+      const panels = [...this.querySelectorAll<HTMLElement>("[data-starts]")];
+      const current = panels.find(
+        ({ dataset }) => !isWorkshopOver(new Date(dataset.starts!)),
+      );
+      for (const panel of panels) panel.hidden = panel !== current;
+      const noWorkshop = this.querySelector<HTMLElement>("[data-no-workshop]");
+      if (noWorkshop) noWorkshop.hidden = Boolean(current);
+    }
+  }
+
+  customElements.define("next-workshop", NextWorkshop);
+</script>
+
 <style>
+  next-workshop {
+    display: contents;
+  }
+
   .home-content {
     display: grid;
     align-content: center;
@@ -112,104 +170,158 @@ const nextWorkshop = getNextWorkshop(workshops);
   }
 
   .next-event {
-    border-color: #ff9f36;
-    color: var(--color-paper);
+    border-color: var(--color-accent);
+    color: var(--color-text);
+  }
+
+  .next-event[hidden] {
+    display: none;
   }
 
   .next-event .panel-bar {
     padding: var(--space-2) var(--space-3);
-    background: #ff9f36;
-    color: var(--color-ink);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
   }
 
   .next-event .panel-body {
-    padding: clamp(var(--space-3), 2vw, var(--space-4));
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5) var(--space-3) var(--space-3);
+  }
+
+  .next-event .actions {
+    margin-top: auto;
+    padding-top: var(--space-4);
   }
 
   .next-event .panel-title,
   .next-event .label {
-    color: #ff9f36;
+    color: var(--color-accent);
   }
 
   .next-event .facts {
-    border-color: #ff9f36;
+    border-color: var(--color-accent);
   }
 
-  .next-event .button {
-    border-color: #ff9f36;
-    background: var(--color-ink);
-    color: #ff9f36;
+  .speakers {
+    --lines: 2;
   }
 
-  .next-event .button-primary,
-  .next-event .button:hover {
-    background: #ff9f36;
-    color: var(--color-ink);
+  .excerpt {
+    max-width: 62ch;
+    margin: var(--space-3) 0 0;
   }
 
   .intro {
+    border: 2px solid var(--color-accent);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0px 4px 0 var(--color-accent);
+  }
+
+  .intro p {
+    margin-bottom: 0;
     padding: clamp(var(--space-2), 1.5vw, var(--space-3));
-    border: 2px solid #ff9f36;
-    background: var(--color-card);
-    color: #ffffff;
-    box-shadow: 0px 4px 0 #ff9f36;
+    font-weight: 500;
+  }
+
+  .all-workshops {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3);
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-align: center;
   }
 
   .intro-title {
-    margin-bottom: var(--space-2);
-    color: var(--color-paper);
-    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-size: clamp(1.25rem, 2.4vw, 2rem);
+    letter-spacing: -0.04em;
   }
 
   .intro-title .terminal-token {
-    color: #ff9f36;
     font-size: inherit;
   }
 
   @media (min-width: 900px) {
     .home-content {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(250px, 0.75fr) minmax(0, 1.55fr);
       grid-template-areas:
-        "event event"
-        "intro lapikud";
-      align-items: stretch;
-      flex: 1;
-      gap: var(--space-3);
+        "intro event"
+        "lapikud event"
+        "workshops event";
+      grid-template-rows: auto auto 1fr;
+      align-items: start;
+      margin-block: auto;
     }
 
     .intro {
       grid-area: intro;
-      align-self: center;
+    }
+
+    .all-workshops {
+      grid-area: workshops;
+      align-self: stretch;
     }
 
     .next-event {
       grid-area: event;
       display: flex;
       flex-direction: column;
+      align-self: stretch;
     }
 
-    .next-event .workshop-body {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: var(--space-4);
+    .next-event .panel-body {
+      flex: 1;
     }
-
-    .next-event .actions {
-      display: grid;
-      justify-items: stretch;
-      margin-top: 0;
-    }
-
   }
 
   @media (max-height: 900px) and (min-width: 900px) {
-    .next-event .panel-body {
-      padding-block: 16px;
+    .next-event .panel-title {
+      margin-bottom: var(--space-3);
+      font-size: clamp(1.6rem, 6.5vh, 4rem);
     }
 
-    .next-event .panel-title {
-      margin-bottom: 12px;
+    .excerpt {
+      --lines: 2;
+    }
+
+    .intro {
+      font-size: 1rem;
+    }
+
+    .home-content {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      gap: var(--space-3);
+    }
+  }
+
+  @media (max-height: 720px) and (min-width: 900px) {
+    .next-event {
+      --text-countdown: clamp(1rem, 5vh, 3rem);
+    }
+
+    .excerpt {
+      display: none;
+    }
+
+    .home-content :global(.lapikud-logo) {
+      width: 130px;
+    }
+  }
+
+  @media (max-height: 640px) and (min-width: 900px) {
+    .next-event :global(.tags),
+    .home-content :global(.lapikud-card p) {
+      display: none;
     }
   }
 </style>

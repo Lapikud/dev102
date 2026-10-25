@@ -1,29 +1,24 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { formatShortWorkshopDate } from "../lib/workshops.ts";
+import { formatShortWorkshopDate, formatSpeakers } from "../lib/workshops.ts";
+import Tags from "./Tags.astro";
 
 interface Props {
   workshop: CollectionEntry<"workshops">;
-  label?: string;
   isNext?: boolean;
-  isUpcoming?: boolean;
 }
 
-const { workshop, label, isNext = false, isUpcoming = false } = Astro.props;
-const { title, date, location, tags } = workshop.data;
+const { workshop, isNext = false } = Astro.props;
+const { title, description, date, location, tags, speakers } = workshop.data;
 ---
 
 <article
-  class:list={[
-    "panel",
-    "panel-body",
-    "workshop-card",
-    "lift",
-    { "next-workshop": isNext, "upcoming-workshop": isUpcoming },
-  ]}
+  class="panel panel-body workshop-card lift"
+  data-starts={date.toISOString()}
+  data-next={isNext || undefined}
 >
   <p class="label meta">
-    {label && <span class="marker">{label}</span>}
+    <span class="marker">&gt;#next</span>
     <time datetime={date.toISOString()}>{formatShortWorkshopDate(date)}</time>
     <span aria-hidden="true">/</span>
     <span>{location}</span>
@@ -33,46 +28,36 @@ const { title, date, location, tags } = workshop.data;
       {title}
     </a>
   </h3>
-  {tags && tags.length > 0 && (
-    <ul class="tags" aria-label="Topics">
-      {tags.map((tag) => (
-        <li>{tag}</li>
-      ))}
-    </ul>
-  )}
+  <p class="label line-clamp speakers">{formatSpeakers(speakers)}</p>
+  <p class="excerpt line-clamp">{description}</p>
+  <Tags tags={tags} />
 </article>
 
 <style>
   .workshop-card {
     position: relative;
+    display: grid;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+    row-gap: var(--space-2);
     padding: var(--space-4);
   }
 
-  .next-workshop {
-    border-color: #ff9f36;
-    background-color: var(--color-lighter-ink);
-    color: var(--color-paper);
+  .workshop-card > :global(*) {
+    margin: 0;
   }
 
-  .next-workshop .marker,
-  .next-workshop h3 a {
-    color: #ff9f36;
+  .workshop-card[data-next] {
+    border-color: var(--color-accent);
+    background-color: var(--color-page);
   }
 
-  .upcoming-workshop:hover,
-  .upcoming-workshop:focus-within {
-    background-color: #ff9f36;
-    color: var(--color-ink);
+  .workshop-card[data-next] h3 a {
+    color: var(--color-accent);
   }
 
-  .upcoming-workshop {
-    --lift-shadow-color: var(--color-paper);
-    padding: var(--space-3);
-  }
-
-  .upcoming-workshop:hover h3 a,
-  .upcoming-workshop:focus-within h3 a {
-    color: var(--color-ink);
+  .workshop-card:not([data-next]) .marker {
+    display: none;
   }
 
   .meta {
@@ -80,17 +65,9 @@ const { title, date, location, tags } = workshop.data;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    margin-bottom: var(--space-2);
-  }
-
-  .marker {
-    padding: 0 var(--space-1);
-    background: var(--color-ink);
-    color: var(--color-paper);
   }
 
   h3 {
-    margin-bottom: 0;
     font-size: clamp(1.4rem, 2.4vw, 1.9rem);
     letter-spacing: -0.02em;
     white-space: pre-line;
@@ -98,6 +75,15 @@ const { title, date, location, tags } = workshop.data;
 
   h3 a {
     text-decoration: none;
+  }
+
+  .speakers {
+    --lines: 2;
+  }
+
+  .excerpt {
+    --lines: 2;
+    font-size: 0.9rem;
   }
 
   .stretched-link::after {

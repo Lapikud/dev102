@@ -6,6 +6,7 @@ const workshops = defineCollection({
   loader: glob({ base: "./src/content/workshops", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
     title: z.string(),
+    description: z.string(),
     date: z.coerce.date(),
     location: z.string(),
     tags: z.array(z.string()).optional(),

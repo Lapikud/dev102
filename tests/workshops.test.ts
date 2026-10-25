@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   getUpcomingWorkshops,
   getPastWorkshops,
-  getNextWorkshop,
+  isWorkshopOver,
   formatWorkshopDate,
   formatShortWorkshopDate,
 } from "../src/lib/workshops.ts";
@@ -31,8 +31,16 @@ test("workshops are split by instant and sorted chronologically", () => {
     getPastWorkshops(events, now).map(({ id }) => id),
     ["past"],
   );
+});
 
-  assert.equal(getNextWorkshop(events, now)?.id, "next");
+test("a workshop stays upcoming until its runtime has passed", () => {
+  const start = new Date("2026-10-21T15:30:00Z");
+  assert.equal(isWorkshopOver(start, new Date("2026-10-21T17:00:00Z")), false);
+  assert.equal(isWorkshopOver(start, new Date("2026-10-21T18:30:00Z")), true);
+  assert.equal(
+    getUpcomingWorkshops(events, new Date("2026-10-21T17:00:00Z"))[0]?.id,
+    "next",
+  );
 });
 
 test("dates format in Europe/Tallinn local time", () => {
@@ -44,12 +52,4 @@ test("dates format in Europe/Tallinn local time", () => {
     formatShortWorkshopDate(new Date("2026-10-21T15:30:00Z")),
     "21.10.26 18:30",
   );
-});
-
-test("no upcoming workshop returns null", () => {
-  assert.equal(
-    getNextWorkshop([event("past", "2026-10-20T18:00:00+03:00")], now),
-    null,
-  );
-  assert.equal(getNextWorkshop([], now), null);
 });
