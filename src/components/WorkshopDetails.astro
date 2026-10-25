@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatWorkshopDate } from "../lib/workshops.ts";
+import Tags from "./Tags.astro";
 
 interface Props {
   workshop: CollectionEntry<"workshops">;
@@ -27,9 +28,9 @@ const links = [
 
 <article class="panel">
   <header class="panel-bar label">
-    <a href="/workshops/">~#DEV102 / workshops</a>
+    <a href="/workshops/">~#DEV102/workshops</a>
   </header>
-  <div class="panel-body stagger">
+  <div class="panel-body">
     <h1 class="panel-title" transition:name={`workshop-${workshop.id}`}>
       {title}
     </h1>
@@ -45,13 +46,7 @@ const links = [
         <dd class="fact-value">{location}</dd>
       </div>
     </dl>
-    {tags && tags.length > 0 && (
-      <ul class="tags" aria-label="Topics">
-        {tags.map((tag) => (
-          <li>{tag}</li>
-        ))}
-      </ul>
-    )}
+    <Tags tags={tags} />
     {facebookEventUrl && (
       <div class="actions">
         <a
@@ -65,9 +60,7 @@ const links = [
       </div>
     )}
 
-    <h2 class="section-heading learning-heading label">
-      !#outcomes? :
-    </h2>
+    <h2 class="section-heading learning-heading label">!#outcomes :</h2>
     <div class="event-body">
       <slot />
     </div>
@@ -112,42 +105,36 @@ const links = [
 </article>
 
 <style>
-  .panel {
-    border-color: #ff9f36;
-  }
-
   .panel-bar a {
     text-decoration: none;
   }
 
   .panel-bar a:hover {
     text-decoration: underline;
-    color: var(--color-orange-light);
+    color: var(--color-orange);
+  }
+
+  .panel {
+    border-color: var(--color-accent);
   }
 
   .panel-body {
-    color: var(--color-paper);
+    color: var(--color-text);
   }
 
   .panel-title {
     max-width: 16ch;
-    color: var(--color-orange-light);
+    color: var(--color-accent);
   }
 
   .facts {
-    border-color: var(--color-orange-light);
+    border-color: var(--color-accent);
   }
 
   .event-body {
     max-width: 68ch;
     margin-top: var(--space-5);
-    color: var(--color-orange-light);
-  }
-
-  .actions .button-primary {
-    border-color: var(--color-orange-light);
-    background: var(--color-orange-light);
-    color: var(--color-ink);
+    color: var(--color-accent);
   }
 
   .learning-heading {
@@ -156,7 +143,7 @@ const links = [
 
   .event-section {
     margin-top: var(--space-5);
-    color: var(--color-paper);
+    color: var(--color-text);
   }
 
   .event-section ul {
