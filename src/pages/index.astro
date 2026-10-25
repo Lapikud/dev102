@@ -75,8 +75,12 @@ const upcoming = getUpcomingWorkshops(workshops);
                 {workshop.data.speakers &&
                   workshop.data.speakers.length > 0 && (
                     <p class="fact-line">
-                      <span class="label">!#speakers :</span>
-                      <span class="fact-value">
+                      <span class="label">
+                        {workshop.data.speakers.length > 1
+                          ? "!#speakers :"
+                          : "!#speaker :"}
+                      </span>
+                      <span class="fact-value line-clamp speakers">
                         {formatSpeakers(workshop.data.speakers)}
                       </span>
                     </p>
@@ -198,6 +202,10 @@ const upcoming = getUpcomingWorkshops(workshops);
 
   .next-event .facts {
     border-color: var(--color-accent);
+  }
+
+  .speakers {
+    --lines: 2;
   }
 
   .excerpt {

@@ -27,8 +27,10 @@ export function getPastWorkshops<T extends Dated>(
     .sort((a, b) => compareAsc(b.data.date, a.data.date));
 }
 
+const speakerList = new Intl.ListFormat("en", { type: "conjunction" });
+
 export function formatSpeakers(speakers: { name: string }[] = []): string {
-  return speakers.map(({ name }) => name).join(", ");
+  return speakerList.format(speakers.map(({ name }) => name));
 }
 
 export function formatWorkshopDate(date: Date): string {

@@ -28,7 +28,7 @@ const { title, description, date, location, tags, speakers } = workshop.data;
       {title}
     </a>
   </h3>
-  <p class="label">{formatSpeakers(speakers)}</p>
+  <p class="label line-clamp speakers">{formatSpeakers(speakers)}</p>
   <p class="excerpt line-clamp">{description}</p>
   <Tags tags={tags} />
 </article>
@@ -75,6 +75,10 @@ const { title, description, date, location, tags, speakers } = workshop.data;
 
   h3 a {
     text-decoration: none;
+  }
+
+  .speakers {
+    --lines: 2;
   }
 
   .excerpt {

@@ -8,6 +8,7 @@ description: You probably already use an IDE or text editor to write code, but a
 facebookEventUrl: https://fb.me/e/5ePMBCeFp
 speakers:
   - name: O. Promise Temitope
+  - name: Remu-Mooses Malakias Salminen
 tags:
   - IDEs
   - Text editors
