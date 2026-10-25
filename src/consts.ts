@@ -5,7 +5,9 @@ export const LAPIKUD_DESCRIPTION =
   "Lapikud is TalTech's software development club, bringing together current and former students interested in IT.";
 export const LAPIKUD_URL = "https://lapikud.ee";
 
+export const THEMES = ["orange", "dark"] as const;
+
 export const BRAND_COLORS = {
   orange: "#ff9f36",
-  ink: "#0d0d0d",
+  ink: "#111111",
 } as const;

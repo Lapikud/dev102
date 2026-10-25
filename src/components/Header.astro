@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import duck from "../assets/duck.png";
+import ThemePicker from "./ThemePicker.astro";
 ---
 
-<header class="site-header">
-  <nav class="site-nav" aria-label="Main navigation">
+<header class="site-header on-ink">
+  <div class="site-nav">
     <a class="brand" href="/" aria-label="DEV102 home">
       <Image
         src={duck}
@@ -15,32 +16,34 @@ import duck from "../assets/duck.png";
       />
       <span class="brand-token">~#DEV102</span>
     </a>
-    <div class="nav-links">
-      <a
-        href="/"
-        aria-current={Astro.url.pathname === "/" ? "page" : undefined}
-      >
-        Home
-      </a>
-      <a
-        href="/workshops/"
-        aria-current={
-          Astro.url.pathname.startsWith("/workshops") ? "page" : undefined
-        }
-      >
-        Workshops
-      </a>
+    <div class="header-actions">
+      <nav class="nav-links" aria-label="Main navigation">
+        <a
+          href="/"
+          aria-current={Astro.url.pathname === "/" ? "page" : undefined}
+        >
+          Home
+        </a>
+        <a
+          href="/workshops/"
+          aria-current={
+            Astro.url.pathname.startsWith("/workshops") ? "page" : undefined
+          }
+        >
+          Workshops
+        </a>
+      </nav>
+      <ThemePicker />
     </div>
-  </nav>
+  </div>
 </header>
 
 <style>
   .site-header {
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: 1;
     border-bottom: 1px solid rgb(255 255 255 / 18%);
-    background: var(--color-ink);
-    color: var(--color-paper);
   }
 
   .site-nav {
@@ -75,6 +78,12 @@ import duck from "../assets/duck.png";
     color: var(--color-paper);
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 4vw, 40px);
+  }
+
   .nav-links {
     display: flex;
     align-items: center;
@@ -88,9 +97,9 @@ import duck from "../assets/duck.png";
   }
 
   .nav-links a[aria-current="page"] {
-    color: #ff9f36;
+    color: var(--color-orange);
     text-decoration: underline;
-    text-decoration-color: #ff9f36;
+    text-decoration-color: var(--color-orange);
     text-decoration-thickness: 3px;
     text-underline-offset: 7px;
   }
@@ -109,8 +118,12 @@ import duck from "../assets/duck.png";
       width: 50px;
     }
 
+    .header-actions,
     .nav-links {
       gap: 10px;
+    }
+
+    .nav-links {
       font-size: 0.65rem;
     }
   }

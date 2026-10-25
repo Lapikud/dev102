@@ -1,0 +1,169 @@
+---
+import { THEMES } from "../consts";
+---
+
+<theme-picker>
+  <button
+    class="theme-toggle"
+    type="button"
+    popovertarget="theme-menu"
+    aria-label="Choose theme"
+  >
+    <span class="swatch" aria-hidden="true"></span>
+    <span class="theme-toggle-label">!#theme</span>
+  </button>
+  <div id="theme-menu" class="theme-menu on-ink" popover>
+    <fieldset>
+      <legend class="sr-only">Theme</legend>
+      <label>
+        <input type="radio" name="theme" value="system" />
+        <span class="swatch swatch-system" aria-hidden="true">
+          <span data-theme="dark"></span>
+          <span data-theme="orange"></span>
+        </span>
+        system
+      </label>
+      {THEMES.map((theme) => (
+        <label>
+          <input
+            type="radio"
+            name="theme"
+            value={theme}
+            checked={theme === THEMES[0]}
+          />
+          <span class="swatch" data-theme={theme} aria-hidden="true"></span>
+          {theme}
+        </label>
+      ))}
+    </fieldset>
+  </div>
+</theme-picker>
+
+<script>
+  class ThemePicker extends HTMLElement {
+    connectedCallback() {
+      const { themeChoice } = document.documentElement.dataset;
+      const input = this.querySelector<HTMLInputElement>(
+        `input[value="${themeChoice}"]`,
+      );
+      if (input) input.checked = true;
+      this.addEventListener("change", this.#choose);
+    }
+
+    #choose = (event: Event) => {
+      const { value } = event.target as HTMLInputElement;
+      document.dispatchEvent(
+        new CustomEvent("theme-change", { detail: value }),
+      );
+    };
+  }
+
+  customElements.define("theme-picker", ThemePicker);
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+    anchor-name: --theme-toggle;
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-orange);
+  }
+
+  .swatch {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    flex: none;
+    border: 1px solid rgb(255 255 255 / 40%);
+    background: linear-gradient(
+      135deg,
+      var(--color-page) 50%,
+      var(--color-accent) 50%
+    );
+  }
+
+  .swatch-system {
+    background: none;
+  }
+
+  .swatch-system span {
+    flex: 1;
+    background: var(--color-page);
+  }
+
+  .theme-menu {
+    position-anchor: --theme-toggle;
+    inset: auto;
+    top: anchor(bottom);
+    right: anchor(right);
+    margin: var(--space-1) 0 0;
+    padding: var(--space-1);
+    border: 1px solid rgb(255 255 255 / 18%);
+  }
+
+  @supports not (anchor-name: --theme-toggle) {
+    .theme-menu {
+      top: 72px;
+      right: var(--page-gutter);
+    }
+  }
+
+  fieldset {
+    display: grid;
+    min-width: 160px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  label {
+    position: relative;
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-2);
+    cursor: pointer;
+  }
+
+  label:hover {
+    background: rgb(255 255 255 / 8%);
+  }
+
+  input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  label:has(:checked) {
+    color: var(--color-orange);
+  }
+
+  label:has(:focus-visible) {
+    outline: 3px solid var(--color-paper);
+    outline-offset: -3px;
+  }
+
+  @media (max-width: 480px) {
+    .theme-toggle-label {
+      display: none;
+    }
+  }
+</style>
