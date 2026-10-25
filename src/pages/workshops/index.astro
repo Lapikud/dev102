@@ -10,7 +10,7 @@ const past = getPastWorkshops(workshops);
 ---
 
 <SiteLayout pageTitle="Workshops">
-  <div class="workshops-page stagger">
+  <div class="workshops-page">
     <header class="intro">
       <h1 class="terminal-token">~#DEV102/workshops</h1>
       <p>
@@ -18,65 +18,62 @@ const past = getPastWorkshops(workshops);
       </p>
     </header>
 
-    <section aria-labelledby="upcoming-heading">
-      <h2 id="upcoming-heading" class="section-heading label">
-        !#<span class="heading-title">WORKSHOPS</span> :
+    <section aria-labelledby="workshops-heading">
+      <h2 id="workshops-heading" class="section-heading label">
+        !#workshops :
       </h2>
-      {upcoming.length > 0 ? (
-        <div class="workshop-list stagger">
-          {upcoming.map((workshop, i) => (
+      {workshops.length > 0 ? (
+        <workshop-list class="workshop-list">
+          {[...upcoming, ...past].map((workshop) => (
             <WorkshopCard
               workshop={workshop}
-              label={i === 0 ? ">#next" : undefined}
-              isNext={i === 0}
-              isUpcoming
+              isNext={workshop === upcoming[0]}
             />
           ))}
-        </div>
+        </workshop-list>
       ) : (
-        <p class="panel panel-body label">
-          No upcoming workshops yet. Check back soon.
-        </p>
+        <p class="panel panel-body label">No workshops yet. Check back soon.</p>
       )}
     </section>
-
-    {past.length > 0 && (
-      <section class="archive-section" aria-labelledby="past-heading">
-        <h2 id="past-heading" class="section-heading label">
-          !#archive :
-        </h2>
-        <div class="workshop-list stagger">
-          {past.map((workshop) => (
-            <WorkshopCard workshop={workshop} />
-          ))}
-        </div>
-      </section>
-    )}
   </div>
 </SiteLayout>
 
+<script>
+  import { isWorkshopOver } from "../../lib/workshops.ts";
+
+  class WorkshopList extends HTMLElement {
+    connectedCallback() {
+      const cards = [...this.querySelectorAll<HTMLElement>("[data-starts]")];
+      const startOf = (card: HTMLElement) => Date.parse(card.dataset.starts!);
+      const live = cards
+        .filter((card) => !isWorkshopOver(new Date(card.dataset.starts!)))
+        .sort((a, b) => startOf(a) - startOf(b));
+      const over = cards
+        .filter((card) => !live.includes(card))
+        .sort((a, b) => startOf(b) - startOf(a));
+      this.append(...live, ...over);
+      for (const card of cards)
+        card.toggleAttribute("data-next", card === live[0]);
+    }
+  }
+
+  customElements.define("workshop-list", WorkshopList);
+</script>
+
 <style>
-  #upcoming-heading {
-    color: var(--color-paper);
-  }
-
-  #upcoming-heading .heading-title {
-    color: var(--color-orange-light);
-  }
-
   .workshops-page {
     display: grid;
     gap: var(--space-6);
     padding: clamp(var(--space-3), 3vw, var(--space-5));
-    border: 2px solid #ff9f36;
-    background-color: var(--color-card);
-    box-shadow: 0px 4px 0 #ff9f36;
+    border: 2px solid var(--color-accent);
+    background-color: var(--color-surface);
+    box-shadow: 0px 4px 0 var(--color-accent);
   }
 
   .workshop-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
     gap: var(--space-4);
-    color: var(--color-orange-light);
+    color: var(--color-accent);
   }
 </style>
