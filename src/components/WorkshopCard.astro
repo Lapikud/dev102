@@ -5,13 +5,23 @@ import { formatShortWorkshopDate } from "../lib/workshops.ts";
 interface Props {
   workshop: CollectionEntry<"workshops">;
   label?: string;
+  isNext?: boolean;
+  isUpcoming?: boolean;
 }
 
-const { workshop, label } = Astro.props;
+const { workshop, label, isNext = false, isUpcoming = false } = Astro.props;
 const { title, date, location, tags } = workshop.data;
 ---
 
-<article class="panel panel-body workshop-card lift">
+<article
+  class:list={[
+    "panel",
+    "panel-body",
+    "workshop-card",
+    "lift",
+    { "next-workshop": isNext, "upcoming-workshop": isUpcoming },
+  ]}
+>
   <p class="label meta">
     {label && <span class="marker">{label}</span>}
     <time datetime={date.toISOString()}>{formatShortWorkshopDate(date)}</time>
@@ -36,6 +46,33 @@ const { title, date, location, tags } = workshop.data;
   .workshop-card {
     position: relative;
     padding: var(--space-4);
+  }
+
+  .next-workshop {
+    border-color: #ff9f36;
+    background-color: var(--color-lighter-ink);
+    color: var(--color-paper);
+  }
+
+  .next-workshop .marker,
+  .next-workshop h3 a {
+    color: #ff9f36;
+  }
+
+  .upcoming-workshop:hover,
+  .upcoming-workshop:focus-within {
+    background-color: #ff9f36;
+    color: var(--color-ink);
+  }
+
+  .upcoming-workshop {
+    --lift-shadow-color: var(--color-paper);
+    padding: var(--space-3);
+  }
+
+  .upcoming-workshop:hover h3 a,
+  .upcoming-workshop:focus-within h3 a {
+    color: var(--color-ink);
   }
 
   .meta {
