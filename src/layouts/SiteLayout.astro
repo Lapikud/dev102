@@ -22,7 +22,7 @@ const { pageTitle, description = SITE_DESCRIPTION } = Astro.props;
       const prefersDark = matchMedia("(prefers-color-scheme: dark)");
       let choice = null;
       try {
-        choice = localStorage.getItem("theme");
+        choice = localStorage.getItem("theme") ?? "system";
       } catch (error) {
         console.warn(error);
       }
