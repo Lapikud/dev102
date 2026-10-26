@@ -15,10 +15,13 @@ const { pageTitle, description = SITE_DESCRIPTION } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-themes={JSON.stringify(THEMES)}>
   <head>
     <BaseHead pageTitle={pageTitle} description={description} />
-    <script is:inline define:vars={{ themes: THEMES }}>
+    <script is:inline>
+      const themes = JSON.parse(
+        document.documentElement.dataset.themes ?? "[]",
+      );
       const prefersDark = matchMedia("(prefers-color-scheme: dark)");
       let choice = null;
       try {
