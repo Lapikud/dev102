@@ -1,7 +1,7 @@
 ---
 title: |-
   Git Workshop
-date: "2026-11-04T18:30:00+02:00"
+date: "2026-11-05T18:30:00+02:00"
 location: ICO-316
 facebookEventUrl: https://fb.me/e/gGKxweX7A
 speakers:
