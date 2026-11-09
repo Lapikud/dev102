@@ -2,7 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const dist = new URL("../dist/", import.meta.url);
+const dist = new URL("../dist/client/", import.meta.url);
 const read = (path: string) => readFile(new URL(path, dist), "utf8");
 
 const workshopIds = (
