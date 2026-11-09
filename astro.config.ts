@@ -3,9 +3,13 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
 import favicons from "astro-favicons";
 import { BRAND_COLORS, SITE_DESCRIPTION, SITE_TITLE } from "./src/consts";
+import node from "@astrojs/node";
 
 export default defineConfig({
   site: "https://dev102.lapikud.ee",
+  adapter: node({
+    mode: 'standalone',
+  }),
   integrations: [
     mdx(),
     sitemap(),
