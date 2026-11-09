@@ -1,0 +1,37 @@
+name: Build & Deploy
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  validate:                      # GitHub-hosted — the PR safety gate
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test           # run the repo's test suite
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist/
+
+  deploy:                        # Push to lapikud lxc, main branch only
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, dev102]
+    steps:
+      - uses: actions/checkout@v4          # provides package.json + lockfile
+      - uses: actions/download-artifact@v4 # the site built on the hosted runner
+        with: { name: site, path: dist/ }
+      - name: Deploy build into serving dir and restart
+        run: |
+          source /home/web/.nvm/nvm.sh                       # node/pnpm come from nvm
+          rsync -a --delete dist/ /home/web/dev102/dist/     # swap in the new build
+          cp package.json pnpm-lock.yaml /home/web/dev102/   # keep manifest in sync
+          cd /home/web/dev102
+          pnpm install --prod --frozen-lockfile              # runtime deps only
+          sudo systemctl restart dev102.service

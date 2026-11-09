@@ -3,6 +3,7 @@ title: |-
   Git Workshop
 date: "2026-11-04T18:30:00+02:00"
 location: ICO-316
+description: Have you ever wondered how the code you write on your computer is connected to the repositories you have in your GitHub or GitLab account? What happens deeper than just pressing buttons like commit and push in an IDE? What even is Git and why is it so important for every developer?
 facebookEventUrl: https://fb.me/e/gGKxweX7A
 speakers:
   - name: Kerdo Käärma
