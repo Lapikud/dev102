@@ -24,8 +24,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: [self-hosted, dev102]
     steps:
-      - uses: actions/checkout@v4          # just for package.json + lockfile
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4          # provides package.json + lockfile
+      - uses: actions/download-artifact@v4 # the site built on the hosted runner
         with: { name: site, path: dist/ }
-      - run: pnpm install --prod --frozen-lockfile
-      - run: sudo systemctl restart dev102.service
+      - name: Deploy build into serving dir and restart
+        run: |
+          source /home/web/.nvm/nvm.sh                       # node/pnpm come from nvm
+          rsync -a --delete dist/ /home/web/dev102/dist/     # swap in the new build
+          cp package.json pnpm-lock.yaml /home/web/dev102/   # keep manifest in sync
+          cd /home/web/dev102
+          pnpm install --prod --frozen-lockfile              # runtime deps only
+          sudo systemctl restart dev102.service
