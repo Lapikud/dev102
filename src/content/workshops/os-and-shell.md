@@ -4,7 +4,7 @@ title: |-
   Shell
 date: "2026-11-18T18:30:00+03:00"
 location: ICO-316
-description: The terminal might look like a mysterious black screen, but it's actually one of the most powerful tools at your disposal. Have you ever wondered what happens behind the scenes when you run a command? What a shell actually is?
+description: You use an operating system every day, but have you ever wondered what it's actually doing? And when you open that mysterious black window - what even is a shell, and why is it different on Windows, macOS and Linux?
 facebookEventUrl: https://facebook.com/events/s/dev102-shell-os/1523867729576056/
 speakers:
   - name: Randel Mandre
