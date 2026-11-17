@@ -2,7 +2,7 @@
 title: |-
   OS &
   Shell
-date: "2026-11-18T18:30:00+03:00"
+date: "2026-11-18T18:30:00+02:00"
 location: ICO-316
 description: You use an operating system every day, but have you ever wondered what it's actually doing? And when you open that mysterious black window - what even is a shell, and why is it different on Windows, macOS and Linux?
 facebookEventUrl: https://facebook.com/events/s/dev102-shell-os/1523867729576056/
